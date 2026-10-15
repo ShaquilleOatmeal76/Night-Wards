@@ -22,6 +22,8 @@
         ];
 
          let squareX = 0;
+         let lastTime = preformance.now();
+         const squareSpeed = 120;
 
          function draw () {
             ctx.fillStyle = "darkslategray"; 
@@ -38,14 +40,17 @@
             ctx.lineJoin = "round";
             ctx.stroke();
             ctx.fillStyle = "yellow"
-            ctx.fillRect(0, 40, 20, 20)
+            ctx.fillRect(squareX, 40, 20, 20)
          }
 
          function update () {
             squareX += 2;
          }
 
-         function gameLoop() {
+         function gameLoop(timestamp) {
+            const dt = (timestamp - lastTime) /1000;
+            lastTime = timestamp;
+
             update();
             draw();
             requestAnimationFrame(gameLoop); 
