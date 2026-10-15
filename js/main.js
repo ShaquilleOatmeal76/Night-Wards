@@ -10,16 +10,19 @@ const path = [
     { x: 720, y: 900 },
     { x: 1920, y: 900 }
 ];
- 
+
 const creature = {
     x: path[0].x,
     y: path[0].y,
     speed: 60,
     target: 1,
-    color: "#d9d6cf"
+    color: "#d9d6cf",
+    health: 5,
+    alive: true
 };
 
 const towers = [];
+const projectiles = [];
 
 let lastTime = performance.now();
 
@@ -28,7 +31,8 @@ const COLORS = {
     road: "#4a3424",
     tower: "#b8642a",
     light: "#f2efe6",
-    range: "rgba(242, 239, 230, 0.15)"
+    range: "rgba(242, 239, 230, 0.15)",
+    projectile: "#e8a04a"
 };
 
 
@@ -47,31 +51,90 @@ function draw() {
     ctx.stroke();
 
     for (let i = 0; i < towers.length; i++) {
-    const tower = towers[i];
+        const tower = towers[i];
 
-    ctx.fillStyle = COLORS.range;
-    ctx.beginPath();
-    ctx.arc(tower.x, tower.y, tower.range, 0, Math.PI * 2);
-    ctx.fill();
-
-    if (tower.target) {
-        ctx.strokeStyle = COLORS.light;
-        ctx.lineWidth = 2;
+        ctx.fillStyle = COLORS.range;
         ctx.beginPath();
-        ctx.moveTo(tower.x, tower.y);
-        ctx.lineTo(tower.target.x, tower.target.y);
-        ctx.stroke();
+        ctx.arc(tower.x, tower.y, tower.range, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = COLORS.tower;
+        ctx.fillRect(tower.x - 20, tower.y - 20, 40, 40);
     }
 
-    ctx.fillStyle = COLORS.tower;
-    ctx.fillRect(tower.x - 20, tower.y - 20, 40, 40);
-}
+    if (creature.alive) {
+        ctx.fillStyle = creature.color;
+        ctx.fillRect(creature.x - 15, creature.y - 15, 30, 30);
+    }
 
-    ctx.fillStyle = creature.color
-    ctx.fillRect(creature.x - 15, creature.y - 15, 30, 30)
+    ctx.fillStyle = COLORS.projectile;
+    for (let i = 0; i < projectiles.length; i++) {
+        const projectile = projectiles[i];
+        ctx.beginPath();
+        ctx.arc(projectile.x, projectile.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+    }
 }
 
 function update(dt) {
+    updateTowers(dt);
+    updateProjectiles(dt);
+    updateCreature(dt);
+}
+
+function updateTowers(dt) {
+    for (let i = 0; i < towers.length; i++) {
+        const tower = towers[i];
+        const distance = Math.hypot(creature.x - tower.x, creature.y - tower.y);
+
+        if (creature.alive && distance <= tower.range) {
+            tower.target = creature;
+        } else {
+            tower.target = null;
+        }
+        tower.cooldown -= dt;
+        if (tower.target && tower.cooldown <= 0) {
+            projectiles.push({
+                x: tower.x,
+                y: tower.y,
+                target: tower.target,
+                speed: 600,
+                damage: tower.damage
+            });
+            tower.cooldown = tower.fireDelay;
+        }
+    }
+}
+
+function updateProjectiles(dt) {
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+        const projectile = projectiles[i];
+
+        if (!projectile.target.alive) {
+            projectiles.splice(i, 1);
+            continue;
+        }
+
+        const dx = projectile.target.x - projectile.x;
+        const dy = projectile.target.y - projectile.y;
+        const distance = Math.hypot(dx, dy);
+        const step = projectile.speed * dt;
+
+        if (distance <= step) {
+            projectile.target.health -= projectile.damage;
+            if (projectile.target.health <= 0) {
+                projectile.target.alive = false;
+            }
+            projectiles.splice(i, 1);
+        } else {
+            projectile.x += (dx / distance) * step;
+            projectile.y += (dy / distance) * step;
+        }
+    }
+}
+
+function updateCreature(dt) {
+    if (!creature.alive) return;
     if (creature.target >= path.length) return;
 
     const target = path[creature.target];
@@ -80,17 +143,6 @@ function update(dt) {
     const distance = Math.hypot(dx, dy);
 
     const step = creature.speed * dt;
-
-    for (let i = 0; i < towers.length; i++) {
-        const tower = towers[i];
-        const distance = Math.hypot(creature.x - tower.x, creature.y - tower.y);
-
-        if (distance <= tower.range) {
-            tower.target = creature;
-        } else{
-            tower.target = null;
-        }
-    }
 
     if (distance <= step) {
         creature.x = target.x;
@@ -105,8 +157,16 @@ function update(dt) {
 function handleClick(event) {
     const x = event.offsetX * (canvas.width / canvas.clientWidth);
     const y = event.offsetY * (canvas.height / canvas.clientHeight);
-    towers.push({x: x, y: y, range: 200, target: null});
-} 
+    towers.push({
+        x: x,
+        y: y,
+        range: 200,
+        target: null,
+        damage: 1,
+        fireDelay: 0.8,
+        cooldown: 0
+    });
+}
 
 canvas.addEventListener("click", handleClick);
 
