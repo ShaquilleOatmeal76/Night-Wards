@@ -8,7 +8,7 @@ A browser tower defense game where you defend your settlement from creatures and
 
 ## Status
 
-Early development. Currently working on **v0.1**: the game loop and a creature walking the path.
+Early development. Currently working on **v0.2**: the game loop and a creature walking the path.
 
 ## Roadmap
 

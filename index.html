@@ -3,81 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tower Defense</title>
+    <title>Night Wards</title>
 </head>
 <body>
     <canvas id="game" width="800" height="600"></canvas> 
-    <script>
-         const canvas = document.getElementById("game");
-         const ctx = canvas.getContext("2d");
-         const path = [
-            {x:0,y:50}, 
-            {x:100, y:50}, 
-            {x:100, y:350}, 
-            {x:500, y:350}, 
-            {x:500, y:150}, 
-            {x:300, y:150}, 
-            {x:300, y:500}, 
-            {x:800, y:500}
-        ];
-
-         const creature = {
-            x: path[0].x,
-            y: path[0].y,
-            speed: 60,
-            target: 1
-         };
-         let lastTime = performance.now();
-        
-
-         function draw () {
-            ctx.fillStyle = "darkslategray"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.strokeStyle = "red";
-            ctx.lineWidth = 23;
-            ctx.beginPath();
-            for (let i = 0; i < path.length; i++) {
-                ctx.lineTo(path[i].x, path[i].y)  
-            }   
-
-
-            ctx.lineJoin = "round";
-            ctx.stroke();
-            ctx.fillStyle = "yellow"
-            ctx.fillRect(creature.x - 10, creature.y - 10, 20, 20)
-         }
-
-         function update (dt) {
-            if (creature.target >= path.length) return;
-
-            const target = path[creature.target];
-            const dx = target.x - creature.x;
-            const dy = target.y - creature.y;
-            const distance = Math.hypot(dx, dy);
-
-            const step = creature.speed * dt;
-
-            if(distance <= step) {
-                creature.x = target.x;
-                creature.y = target.y;
-                creature.target += 1;
-            } else {
-                creature.x += (dx / distance) * step;
-                creature.y += (dy / distance) * step;
-            }
-         }
-
-         function gameLoop(timestamp) {
-            const dt = Math.min((timestamp - lastTime) /1000, 0.1);
-            lastTime = timestamp;
-
-            update(dt);
-            draw();
-            requestAnimationFrame(gameLoop); 
-         }
-
-         requestAnimationFrame(gameLoop);
-    </script>   
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
