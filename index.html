@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Defense</title>
+</head>
+<body>
+    <canvas id="game" width="800" height="600"></canvas> 
+    <script>
+         const canvas = document.getElementById("game");
+         const ctx = canvas.getContext("2d");
+
+         ctx.fillStyle = "darkslategray"; 
+         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+         ctx.fillStyle = "green";
+         ctx.fillRect(350, 280, 100, 40);
+    </script>   
+</body>
+</html>
