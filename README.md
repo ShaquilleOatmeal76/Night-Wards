@@ -4,7 +4,7 @@ A browser tower defense game where you defend your settlement from creatures and
 
 ## Play
 
-Coming soon
+[Play Night Wards](https://shaquilleoatmeal76.github.io/Night-Wards/)
 
 ## Status
 
