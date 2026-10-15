@@ -1,16 +1,16 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const path = [
-    { x: 0, y: 50 },
-    { x: 100, y: 50 },
-    { x: 100, y: 350 },
-    { x: 500, y: 350 },
-    { x: 500, y: 150 },
-    { x: 300, y: 150 },
-    { x: 300, y: 500 },
-    { x: 800, y: 500 }
+    { x: 0, y: 90 },
+    { x: 240, y: 90 },
+    { x: 240, y: 630 },
+    { x: 1200, y: 630 },
+    { x: 1200, y: 270 },
+    { x: 720, y: 270 },
+    { x: 720, y: 900 },
+    { x: 1920, y: 900 }
 ];
-
+ 
 const creature = {
     x: path[0].x,
     y: path[0].y,
@@ -25,7 +25,7 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.strokeStyle = "red";
-    ctx.lineWidth = 23;
+    ctx.lineWidth = 40;
     ctx.beginPath();
     for (let i = 0; i < path.length; i++) {
         ctx.lineTo(path[i].x, path[i].y)
@@ -35,7 +35,7 @@ function draw() {
     ctx.lineJoin = "round";
     ctx.stroke();
     ctx.fillStyle = "yellow"
-    ctx.fillRect(creature.x - 10, creature.y - 10, 20, 20)
+    ctx.fillRect(creature.x - 15, creature.y - 15, 30, 30)
 }
 
 function update(dt) {
