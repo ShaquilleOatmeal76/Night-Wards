@@ -14,8 +14,19 @@
          ctx.fillStyle = "darkslategray"; 
          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-         ctx.fillStyle = "green";
-         ctx.fillRect(350, 280, 100, 40);
+         ctx.strokeStyle = "red";
+         ctx.lineWidth = 23;
+         ctx.beginPath();
+         ctx.moveTo(0, 50);
+         ctx.lineTo(100, 50);
+         ctx.lineTo(100,350);
+         ctx.lineTo(500,350);
+         ctx.lineTo(500,150);
+         ctx.lineTo(300,150);
+         ctx.lineTo(300,500);
+         ctx.lineTo(800,500);
+
+         ctx.stroke();
     </script>   
 </body>
 </html>
