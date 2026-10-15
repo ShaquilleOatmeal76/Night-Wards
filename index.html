@@ -10,6 +10,16 @@
     <script>
          const canvas = document.getElementById("game");
          const ctx = canvas.getContext("2d");
+         const path = [
+            {x:0,y:50}, 
+            {x:100, y:50}, 
+            {x:100, y:350}, 
+            {x:500, y:350}, 
+            {x:500, y:150}, 
+            {x:300, y:150}, 
+            {x:300, y:500}, 
+            {x:800, y:500}
+        ];
 
          ctx.fillStyle = "darkslategray"; 
          ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -17,15 +27,12 @@
          ctx.strokeStyle = "red";
          ctx.lineWidth = 23;
          ctx.beginPath();
-         ctx.moveTo(0, 50);
-         ctx.lineTo(100, 50);
-         ctx.lineTo(100,350);
-         ctx.lineTo(500,350);
-         ctx.lineTo(500,150);
-         ctx.lineTo(300,150);
-         ctx.lineTo(300,500);
-         ctx.lineTo(800,500);
+         for (let i = 0; i < path.length; i++) {
+            ctx.lineTo(path[i].x, path[i].y)  
+         }   
 
+
+         ctx.lineJoin = "round";
          ctx.stroke();
     </script>   
 </body>
