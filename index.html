@@ -21,9 +21,14 @@
             {x:800, y:500}
         ];
 
-         let squareX = 0;
-         let lastTime = preformance.now();
-         const squareSpeed = 120;
+         const creature = {
+            x: path[0].x,
+            y: path[0].y,
+            speed: 60,
+            target: 1
+         };
+         let lastTime = performance.now();
+        
 
          function draw () {
             ctx.fillStyle = "darkslategray"; 
@@ -40,18 +45,34 @@
             ctx.lineJoin = "round";
             ctx.stroke();
             ctx.fillStyle = "yellow"
-            ctx.fillRect(squareX, 40, 20, 20)
+            ctx.fillRect(creature.x - 10, creature.y - 10, 20, 20)
          }
 
-         function update () {
-            squareX += 2;
+         function update (dt) {
+            if (creature.target >= path.length) return;
+
+            const target = path[creature.target];
+            const dx = target.x - creature.x;
+            const dy = target.y - creature.y;
+            const distance = Math.hypot(dx, dy);
+
+            const step = creature.speed * dt;
+
+            if(distance <= step) {
+                creature.x = target.x;
+                creature.y = target.y;
+                creature.target += 1;
+            } else {
+                creature.x += (dx / distance) * step;
+                creature.y += (dy / distance) * step;
+            }
          }
 
          function gameLoop(timestamp) {
-            const dt = (timestamp - lastTime) /1000;
+            const dt = Math.min((timestamp - lastTime) /1000, 0.1);
             lastTime = timestamp;
 
-            update();
+            update(dt);
             draw();
             requestAnimationFrame(gameLoop); 
          }
