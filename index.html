@@ -21,19 +21,37 @@
             {x:800, y:500}
         ];
 
-         ctx.fillStyle = "darkslategray"; 
-         ctx.fillRect(0, 0, canvas.width, canvas.height);
+         let squareX = 0;
 
-         ctx.strokeStyle = "red";
-         ctx.lineWidth = 23;
-         ctx.beginPath();
-         for (let i = 0; i < path.length; i++) {
-            ctx.lineTo(path[i].x, path[i].y)  
-         }   
+         function draw () {
+            ctx.fillStyle = "darkslategray"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 23;
+            ctx.beginPath();
+            for (let i = 0; i < path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y)  
+            }   
 
 
-         ctx.lineJoin = "round";
-         ctx.stroke();
+            ctx.lineJoin = "round";
+            ctx.stroke();
+            ctx.fillStyle = "yellow"
+            ctx.fillRect(0, 40, 20, 20)
+         }
+
+         function update () {
+            squareX += 2;
+         }
+
+         function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop); 
+         }
+
+         requestAnimationFrame(gameLoop);
     </script>   
 </body>
 </html>
