@@ -27,7 +27,8 @@ const COLORS = {
     background: "#14100d",
     road: "#4a3424",
     tower: "#b8642a",
-    light: "#f2efe6"
+    light: "#f2efe6",
+    range: "rgba(242, 239, 230, 0.15)"
 };
 
 
@@ -45,11 +46,26 @@ function draw() {
     ctx.lineJoin = "round";
     ctx.stroke();
 
-    for (let i=0; i < towers.length; i++) {
-        const tower = towers[i];
-        ctx.fillStyle = COLORS.tower;
-        ctx.fillRect(tower.x - 20, tower.y - 20, 40, 40);
+    for (let i = 0; i < towers.length; i++) {
+    const tower = towers[i];
+
+    ctx.fillStyle = COLORS.range;
+    ctx.beginPath();
+    ctx.arc(tower.x, tower.y, tower.range, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (tower.target) {
+        ctx.strokeStyle = COLORS.light;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(tower.x, tower.y);
+        ctx.lineTo(tower.target.x, tower.target.y);
+        ctx.stroke();
     }
+
+    ctx.fillStyle = COLORS.tower;
+    ctx.fillRect(tower.x - 20, tower.y - 20, 40, 40);
+}
 
     ctx.fillStyle = creature.color
     ctx.fillRect(creature.x - 15, creature.y - 15, 30, 30)
@@ -65,6 +81,17 @@ function update(dt) {
 
     const step = creature.speed * dt;
 
+    for (let i = 0; i < towers.length; i++) {
+        const tower = towers[i];
+        const distance = Math.hypot(creature.x - tower.x, creature.y - tower.y);
+
+        if (distance <= tower.range) {
+            tower.target = creature;
+        } else{
+            tower.target = null;
+        }
+    }
+
     if (distance <= step) {
         creature.x = target.x;
         creature.y = target.y;
@@ -78,7 +105,7 @@ function update(dt) {
 function handleClick(event) {
     const x = event.offsetX * (canvas.width / canvas.clientWidth);
     const y = event.offsetY * (canvas.height / canvas.clientHeight);
-    towers.push({x: x, y: y});
+    towers.push({x: x, y: y, range: 200, target: null});
 } 
 
 canvas.addEventListener("click", handleClick);
