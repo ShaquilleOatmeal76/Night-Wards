@@ -15,16 +15,24 @@ const creature = {
     x: path[0].x,
     y: path[0].y,
     speed: 60,
-    target: 1
+    target: 1,
+    color: "#d9d6cf"
 };
 let lastTime = performance.now();
 
+const COLORS = {
+    background: "#14100d",
+    road: "#4a3424",
+    tower: "#b8642a",
+    light: "#f2efe6"
+};
+
 
 function draw() {
-    ctx.fillStyle = "darkslategray";
+    ctx.fillStyle = COLORS.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.strokeStyle = "red";
+    ctx.strokeStyle = COLORS.road;
     ctx.lineWidth = 40;
     ctx.beginPath();
     for (let i = 0; i < path.length; i++) {
@@ -34,7 +42,7 @@ function draw() {
 
     ctx.lineJoin = "round";
     ctx.stroke();
-    ctx.fillStyle = "yellow"
+    ctx.fillStyle = creature.color
     ctx.fillRect(creature.x - 15, creature.y - 15, 30, 30)
 }
 
