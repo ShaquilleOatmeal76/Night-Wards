@@ -18,6 +18,9 @@ const creature = {
     target: 1,
     color: "#d9d6cf"
 };
+
+const towers = [];
+
 let lastTime = performance.now();
 
 const COLORS = {
@@ -39,9 +42,15 @@ function draw() {
         ctx.lineTo(path[i].x, path[i].y)
     }
 
-
     ctx.lineJoin = "round";
     ctx.stroke();
+
+    for (let i=0; i < towers.length; i++) {
+        const tower = towers[i];
+        ctx.fillStyle = COLORS.tower;
+        ctx.fillRect(tower.x - 20, tower.y - 20, 40, 40);
+    }
+
     ctx.fillStyle = creature.color
     ctx.fillRect(creature.x - 15, creature.y - 15, 30, 30)
 }
@@ -65,6 +74,14 @@ function update(dt) {
         creature.y += (dy / distance) * step;
     }
 }
+
+function handleClick(event) {
+    const x = event.offsetX * (canvas.width / canvas.clientWidth);
+    const y = event.offsetY * (canvas.height / canvas.clientHeight);
+    towers.push({x: x, y: y});
+} 
+
+canvas.addEventListener("click", handleClick);
 
 function gameLoop(timestamp) {
     const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
