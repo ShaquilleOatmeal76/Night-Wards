@@ -8,12 +8,12 @@ A browser tower defense game where you defend your settlement from creatures and
 
 ## Status
 
-Early development. Currently working on **v0.2**: Place a tower that targets and shoots
+Early development. Currently working on **v0.3**: Waves, resources and losing
 
 ## Roadmap
 
 - [x] **v0.1:** Canvas, game loop, and one creature walking the path
-- [ ] **v0.2:** Place a tower that targets and shoots
+- [x] **v0.2:** Place a tower that targets and shoots
 - [ ] **v0.3:** Waves, resources, and losing
 - [ ] **v0.4:** Darkness: towers can only target inside light
 - [ ] **v0.5:** Playable character with WASD movement and a lantern
