@@ -1,5 +1,8 @@
 # Night Wards Patch Notes
 
+## v0.2.2
+- Creatures now spawn continuously instead of a single test creature; towers target the creature that’s been walking longest
+
 ## v0.2.1
 - Added a title screen with a Start button, version number, and patch notes link
 

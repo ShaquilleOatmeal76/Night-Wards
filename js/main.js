@@ -1,6 +1,6 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const VERSION = "v0.2.1";
+const VERSION = "v0.2.2";
 let gameState = "title";
 
 const titleScreen = document.getElementById("title-screen");
@@ -18,18 +18,31 @@ const path = [
     { x: 1920, y: 900 }
 ];
 
-const creature = {
-    x: path[0].x,
-    y: path[0].y,
-    speed: 60,
-    target: 1,
-    color: "#d9d6cf",
-    health: 5,
-    alive: true
-};
+const creatures = [];
+
+function spawnCreature() {
+    creatures.push({
+        x: path[0].x,
+        y: path[0].y,
+        speed: 60,
+        target: 1,
+        color: "#d9d6cf",
+        health: 5,
+        alive: true
+    });
+}
 
 const towers = [];
 const projectiles = [];
+let spawnTimer = 0;
+
+function updateSpawning(dt) {
+    spawnTimer -= dt;
+    if (spawnTimer <= 0) {
+        spawnCreature();
+        spawnTimer = 2;
+    }
+}
 
 let lastTime = performance.now();
 
@@ -69,7 +82,8 @@ function draw() {
         ctx.fillRect(tower.x - 20, tower.y - 20, 40, 40);
     }
 
-    if (creature.alive) {
+    for (let i = 0; i < creatures.length; i++) {
+        const creature = creatures[i];
         ctx.fillStyle = creature.color;
         ctx.fillRect(creature.x - 15, creature.y - 15, 30, 30);
     }
@@ -84,21 +98,29 @@ function draw() {
 }
 
 function update(dt) {
+    updateSpawning(dt);
     updateTowers(dt);
     updateProjectiles(dt);
-    updateCreature(dt);
+    updateCreatures(dt);
+}
+
+function findTarget(tower) {
+    for (let i = 0; i < creatures.length; i++) {
+        const creature = creatures[i];
+        const distance = Math.hypot(creature.x - tower.x, creature.y - tower.y);
+
+        if (creature.alive && distance <= tower.range) {
+            return creature;
+        }
+    }
+    return null;
 }
 
 function updateTowers(dt) {
     for (let i = 0; i < towers.length; i++) {
         const tower = towers[i];
-        const distance = Math.hypot(creature.x - tower.x, creature.y - tower.y);
+        tower.target = findTarget(tower);
 
-        if (creature.alive && distance <= tower.range) {
-            tower.target = creature;
-        } else {
-            tower.target = null;
-        }
         tower.cooldown -= dt;
         if (tower.target && tower.cooldown <= 0) {
             projectiles.push({
@@ -140,15 +162,28 @@ function updateProjectiles(dt) {
     }
 }
 
-function updateCreature(dt) {
-    if (!creature.alive) return;
-    if (creature.target >= path.length) return;
+function updateCreatures(dt) {
+    for (let i = creatures.length - 1; i >= 0; i--) {
+        const creature = creatures[i];
 
+        if (!creature.alive) {
+            creatures.splice(i, 1);
+            continue;
+        }
+
+        moveCreature(creature, dt);
+
+        if (creature.target >= path.length) {
+            creatures.splice(i, 1);   // reached the settlement (lives come in v0.2.4)
+        }
+    }
+}
+
+function moveCreature(creature, dt) {
     const target = path[creature.target];
     const dx = target.x - creature.x;
     const dy = target.y - creature.y;
     const distance = Math.hypot(dx, dy);
-
     const step = creature.speed * dt;
 
     if (distance <= step) {
@@ -189,8 +224,8 @@ function gameLoop(timestamp) {
     lastTime = timestamp;
 
     if (gameState === "playing") {
-    update(dt);
-}
+        update(dt);
+    }
     draw();
     requestAnimationFrame(gameLoop);
 }
