@@ -1,5 +1,12 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+const VERSION = "v0.2.1";
+let gameState = "title";
+
+const titleScreen = document.getElementById("title-screen");
+const startButton = document.getElementById("start-button");
+document.getElementById("version").textContent = VERSION;
+
 const path = [
     { x: 0, y: 90 },
     { x: 240, y: 90 },
@@ -170,11 +177,20 @@ function handleClick(event) {
 
 canvas.addEventListener("click", handleClick);
 
+function startGame() {
+    gameState = "playing";
+    titleScreen.classList.add("hidden");
+}
+
+startButton.addEventListener("click", startGame);
+
 function gameLoop(timestamp) {
     const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
     lastTime = timestamp;
 
+    if (gameState === "playing") {
     update(dt);
+}
     draw();
     requestAnimationFrame(gameLoop);
 }

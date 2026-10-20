@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <canvas id="game" width="1920" height="1080"></canvas> 
+    <div id="game-container">
+        <canvas id="game" width="1920" height="1080"></canvas>
+
+        <div id="title-screen" class="screen">
+            <h1>Night Wards</h1>
+            <p id="version"></p>
+            <button id="start-button">Start</button>
+            <a href="https://github.com/ShaquilleOatmeal76/Night-Wards/blob/main/PATCHNOTES.md" target="_blank" rel="noopener">Patch notes</a>
+        </div>
+    </div>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -9,8 +9,61 @@ body {
     overflow: hidden;
 }
 
-canvas {
+#game-container {
+    position: relative;
     width: min(100vw, calc(100vh * 16 / 9));
-    height: auto;
+    aspect-ratio: 16 / 9;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
     display: block;
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(20, 16, 13, 0.85);
+    color: #f2efe6;
+    font-family: Georgia, serif;
+}
+
+.screen h1 {
+    font-size: 4rem;
+    margin: 0;
+    letter-spacing: 0.1em;
+}
+
+#version {
+    margin: 0;
+    opacity: 0.6;
+}
+
+.screen button {
+    background: #b8642a;
+    color: #14100d;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.25rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.screen button:hover {
+    background: #e8a04a;
+}
+
+.screen a {
+    color: #f2efe6;
+    opacity: 0.6;
+}
+
+.hidden {
+    display: none;
 }
